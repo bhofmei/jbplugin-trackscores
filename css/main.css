@@ -1,0 +1,9 @@
+/*
+	Set Track Score CSS
+*/
+
+.trackScoreIcon{
+	background-image: url('../img/ruler.png');
+	width: 16px;
+	height: 16px;
+}
