@@ -5,7 +5,9 @@ this plugin is to be used to add a menu option for XYPlot and MethylXYPlot track
 
 ##Install
 
-For JBrowse 1.11.6+ in the _JBrowse/plugins_ folder, type:
+For JBrowse 1.11.6+ in the _JBrowse/plugins_ folder, create a _TrackScorePlugin_ folder.
+
+In the _TrackScorePlugin_ folder, type:  
 ``git clone https://github.com/bhofmei/jbplugin-trackscores.git``
 
 ##Activate
