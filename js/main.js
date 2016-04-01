@@ -20,7 +20,7 @@ return declare( JBrowsePlugin,
     constructor: function( args ) {
         var thisB = this;
         var browser = this.browser;
-        console.log("plugin: TrackScore");
+        //console.log("plugin: TrackScore");
         
         browser.afterMilestone( 'loadConfig', function() {
             if (typeof browser.config.classInterceptList === 'undefined') {
