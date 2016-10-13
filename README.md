@@ -9,12 +9,13 @@ For JBrowse 1.11.6+ in the _JBrowse/plugins_ folder, type:
 ``git clone https://github.com/bhofmei/jbplugin-trackscores.git TrackScorePlugin``
 
 ##Activate
-Add this to jbrowse.conf:
-    ``"plugins": [
-        'TrackScorePlugin'
-    ],``
+Add this to _jbrowse.conf_ under `[GENERAL]`:
+
+    [ plugins.TrackScorePlugin ]
+    location = plugins/TrackScorePlugin
 
 If that doesn't work, add this to jbrowse_conf.json:
-    ``"plugins" : {
+
+    "plugins" : {
         "TrackScorePlugin" : { "location" : "plugins/TrackScorePlugin" }
-    }``
+    }
