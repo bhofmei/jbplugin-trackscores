@@ -20,7 +20,7 @@ return declare( JBrowsePlugin,
     constructor: function( args ) {
         var thisB = this;
         var browser = this.browser;
-        //console.log("plugin: TrackScore");
+        console.log("TrackScorePlugin starting");
         
         browser.afterMilestone( 'loadConfig', function() {
             if (typeof browser.config.classInterceptList === 'undefined') {
@@ -59,12 +59,21 @@ return declare( JBrowsePlugin,
             iconClass: 'trackScoreIcon',
             action: function() {
                 new TrackScoreDialog({
+                    scaleType: track.config.autoscale,
                     minScore: track.config.min_score,
                     maxScore: track.config.max_score,
-                    setCallback: function( minScore, maxScore ) {
-                        track.config.min_score = minScore;
-                        track.config.max_score = maxScore;
+                    setCallback: function( scaleType, minScore, maxScore ) {
+                        if(scaleType !== undefined){
+                        if(scaleType === 'manual'){
+                            track.config.min_score = minScore;
+                            track.config.max_score = maxScore;
+                        } else {
+                            track.config.autoscale = scaleType;
+                            track.config.min_score = undefined;
+                            track.config.max_score = undefined;
+                        }
                         track.browser.publish('/jbrowse/v1/v/tracks/replace', [track.config]);
+                        }
                     }
                 }).show();
             }
