@@ -39,6 +39,52 @@ return declare( JBrowsePlugin,
     _trackMenuOptions: function(){
         var track = this;
         var options = this.inherited(arguments) || [];
+
+        // create new trackmenu children
+        var scoreTypes = ['manual','global','local','clipped_global'];
+        var scoreTypesInfo = {
+            manual: { name:'Manual', title:'Manually set min/max'},
+            global:{name:'Global', title: 'Min/max based on global min/max'},
+            local: {name:'Local', title: 'Min/Max based on min/max of visible region'},
+            clipped_global:{name:'Clipped global', title: 'Min/max based on (mean +/- 4 * sd)'}
+        }
+
+        // children of menu item
+        this.scaleMenuItems = scoreTypes.map( function(scoreType){
+            return {
+                label: scoreTypesInfo[scoreType]['name'],
+                type: 'dijit/CheckedMenuItem',
+                title: scoreTypesInfo[scoreType]['title'],
+                checked: track.config.autoscale === scoreType,
+                onClick: function(){
+                    if (this.checked && scoreType == 'manual'){
+                        track.config.autoscale = scoreType;
+                        var trackScore = new TrackScoreDialog({
+                            minScore: track.config.min_score,
+                            maxScore: track.config.max_score,
+                            setCallback: function(minScore, maxScore){
+                                track.config.min_score = minScore;
+                                track.config.max_score = maxScore;
+                            }
+                        }).show();
+                        track.browser.publish('/jbrowse/v1/v/tracks/replace', [track.config]);
+                        console.log('manual');
+                    } else if (this.checked) {
+                        track.config.autoscale = scoreType;
+                        if(track.config.hasOwnProperty('max_score'))
+                            delete track.config.max_score;
+                        if(track.config.hasOwnProperty('min_score'))
+                            delete track.config.min_score;
+                        track.browser.publish('/jbrowse/v1/v/tracks/replace', [track.config]);
+                    }
+                    //track.browser.publish('/jbrowse/v1/v/tracks/replace', [track.config]);
+                    //track.redraw();
+                    console.log(JSON.stringify(track.config));
+                }
+
+            }
+        });
+
         // original option
         options.push({
             label: 'Change height',
@@ -57,26 +103,7 @@ return declare( JBrowsePlugin,
         {
             label: 'Change score range',
             iconClass: 'trackScoreIcon',
-            action: function() {
-                new TrackScoreDialog({
-                    scaleType: track.config.autoscale,
-                    minScore: track.config.min_score,
-                    maxScore: track.config.max_score,
-                    setCallback: function( scaleType, minScore, maxScore ) {
-                        if(scaleType !== undefined){
-                        if(scaleType === 'manual'){
-                            track.config.min_score = minScore;
-                            track.config.max_score = maxScore;
-                        } else {
-                            track.config.autoscale = scaleType;
-                            track.config.min_score = undefined;
-                            track.config.max_score = undefined;
-                        }
-                        track.browser.publish('/jbrowse/v1/v/tracks/replace', [track.config]);
-                        }
-                    }
-                }).show();
-            }
+            children: this.scaleMenuItems
         });
         // original option
         if(this.config.logScaleOption) {
