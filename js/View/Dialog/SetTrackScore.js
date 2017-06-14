@@ -37,13 +37,13 @@ return declare (ActionBarDialog,{
      
      constructor: function( args ){
         this.browser = args.browser;
-        //this.min_score = args.minScore;
-        //this.max_score = args.maxScore;
-        //this.scaleType = ((args.minScore===undefined && args.maxScore==undefined) ? args.scaleType : 'manual');
-        this.config = lang.clone(args.config);
+        this.min_score = args.minScore;
+        this.max_score = args.maxScore;
+        this.scaleType = ((args.minScore===undefined && args.maxScore===undefined) ? args.scaleType : 'manual');
+
         this.setCallback    = args.setCallback || function() {};
         this.cancelCallback = args.cancelCallback || function() {};
-        //this.scoreConstraints = {};
+        this.scoreConstraints = {};
         //console.log(this.scaleType, this.min_score, this.max_score);
         this.scoreTypes = {
             manual: { name:'Manual', title:'Manually set min/max'},
@@ -57,19 +57,11 @@ return declare (ActionBarDialog,{
         var ok_button = new dijitButton({
             label: "OK",
             onClick: dojo.hitch(this, function() {
-                //var type = this.scaleType;
+                var type = this.scaleType;
                 var min_score = parseInt(this.minScoreText.getValue());
                 var max_score = parseInt(this.maxScoreText.getValue());
-                if (this.config.autoscale === 'manual' && (isNaN(min_score) || isNaN(max_score)))
-                { this.config.autoscale = false }
-                else if (this.config.autoscale == 'manual'){
-                    this.config.max_score = max_score;
-                    this.config.min_score = min_score;
-                } else {
-                    this.config.max_score = undefined;
-                    this.config.min_score = undefined;
-                }
-                this.setCallback && this.setCallback( this.config );
+                if (type === 'manual' && (isNaN(min_score) || isNaN(max_score))) return;
+                this.setCallback && this.setCallback( type, min_score, max_score );
                 this.hide();
             })
         }).placeAt(actionBar);
@@ -86,7 +78,7 @@ return declare (ActionBarDialog,{
     show: function( callback ) {
         var thisB = this;
         //var curScale = this.scaleType;
-        var curScale = ((thisB.config.min_score===undefined && thisB.config.max_score==undefined) ? thisB.config.autoscale : 'manual')
+        var curScale = ((this.minm_core===undefined && this.max_score===undefined) ? this.scaleType : 'manual');
         dojo.addClass( this.domNode, 'setTrackScoreDialog' );
 
         var table = dom.create('table',{id:'track-score-dialog-table'});
@@ -108,7 +100,7 @@ return declare (ActionBarDialog,{
             this.minScoreText = new dijitTextBox({
                 id: 'adjustminscore',
                 intermediateChanges: true,
-                value: thisB.config.min_score === undefined ? '' : thisB.config.min_score
+                value: thisB.min_score === undefined ? '' : thisB.min_score
             });
             this.minScoreText.onChange = lang.hitch(thisB, '_textManual');
             var minTd = dom.create('td',{innerHTML: 'Min score', className: 'track-score-input'}, row);
@@ -117,7 +109,7 @@ return declare (ActionBarDialog,{
             this.maxScoreText = new dijitTextBox({
                 id: 'adjustmaxscore',
                 intermediateChanges: true,
-                value: thisB.config.max_score === undefined ? '' : thisB.config.max_score
+                value: thisB.max_score === undefined ? '' : thisB.max_score
             });
             this.maxScoreText.onChange = lang.hitch(thisB, '_textManual');
             var maxTd = dom.create('td',{innerHTML: 'Max score', className: 'track-score-input'}, row);
@@ -134,18 +126,18 @@ return declare (ActionBarDialog,{
         this.inherited( arguments );
     },
     
-    _setScale: function( newScale ){
-        this.config.autoscale = newScale;
+    _setScale: function(newScale){
+        this.scaleType = newScale;
     },
 
     _textManual: function(){
         var thisB = this;
-        if(this.config.scaleType !== "manual"){
-            var curType = this.config.autoscale;
+        if(this.scaleType !== "manual"){
+            var curType = this.scaleType;
             registry.byId('track-score-dialog-'+curType).set('checked',false);
             registry.byId('track-score-dialog-manual').set('checked',true);
         }
-        this.config.autoscale = 'manual';
+        this.scaleType = 'manual';
     },
 
     hide: function() {
