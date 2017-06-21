@@ -19,3 +19,13 @@ If that doesn't work, add this to jbrowse_conf.json:
     "plugins" : {
         "TrackScorePlugin" : { "location" : "plugins/TrackScorePlugin" }
     }
+
+## Usage
+
+For all quantitative tracks, there will now be an additional menu option "Change score range", which can be used to change the autoscale and/or min/max options without needing to manually edit the configuation.
+
+![Track menu](img/demo_image1.png)
+
+This opens a dialog box where the user can select between the autoscale options "Global", "Local", and "Clipped global" or manually set the y-axis limits.
+
+![Dialog box](img/demo_image2.png)
