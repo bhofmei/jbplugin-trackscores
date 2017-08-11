@@ -1,0 +1,22 @@
+{
+  "name": "TrackScorePlugin",
+  "version": "1.0.0",
+  "description": "adds menu option to track menu to change scale type and min/max score",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhofmei/jbplugin-trackscores.git"
+  },
+  "keywords": [
+    "JBrowse"
+  ],
+  "author": "Brigitte Hofmeister",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bhofmei/jbplugin-trackscores/issues"
+  },
+  "homepage": "https://github.com/bhofmei/jbplugin-trackscores#readme"
+}
